@@ -1,6 +1,34 @@
 import React, { useState, useEffect } from 'react';
+import PaymentAuditTrail from './PaymentAuditTrail';
+import FraudDetection from './FraudDetection';
+import NotificationBell from './NotificationBell';
+import UserProfile from './UserProfile';
+import PieChartCard from './PieChartCard';
 
 function AdminDashboard() {
+  const [notifications, setNotifications] = useState([
+    { message: "Jean Claude paid RWF 35,000", time: "2 min ago", read: false },
+    { message: "Pending claim from City Med Hospital", time: "5 min ago", read: false },
+    { message: "Alice Uwizera payment delayed", time: "10 min ago", read: false },
+  ]);
+
+  const markAllAsRead = () => {
+    setNotifications(prev =>
+      prev.map(n => ({ ...n, read: true }))
+    );
+  };
+
+  const [user, setUser] = useState({
+    name: "Admin User",
+    email: "admin@rssb.rw",
+    avatar: "https://i.pravatar.cc/150?img=3",
+  });
+
+  const handleProfileUpdate = (newAvatar) => {
+    setUser(prev => ({ ...prev, avatar: newAvatar }));
+  };
+
+  const [showPaymentAudit, setShowPaymentAudit] = useState(false);
   const [stats, setStats] = useState({
     totalUsers: 8450,
     totalHospitals: 76,
@@ -42,13 +70,21 @@ function AdminDashboard() {
       });
   }, []);
 
-  const StatCard = ({ icon, title, value, subtitle, bgColor, iconColor }) => (
+  const StatCard = ({ icon, title, value, subtitle, bgColor, iconColor, onClick, buttonText }) => (
     <div className="bg-white rounded-lg p-6 shadow-sm border">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-medium text-gray-600">{title}</p>
           <p className="text-2xl font-bold text-gray-900">{value}</p>
           {subtitle && <p className="text-xs text-gray-500 mt-1">{subtitle}</p>}
+          {buttonText && (
+            <button 
+              onClick={onClick}
+              className="mt-2 px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700"
+            >
+              {buttonText}
+            </button>
+          )}
         </div>
         <div className={`w-12 h-12 rounded-lg ${bgColor} flex items-center justify-center`}>
           <span className={`text-xl ${iconColor}`}>{icon}</span>
@@ -60,8 +96,12 @@ function AdminDashboard() {
   return (
     <div className="space-y-6">
       {/* Page Title */}
-      <div>
+      <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-900">RSSB Dashboard</h1>
+        <div className="flex items-center space-x-4">
+          <NotificationBell notifications={notifications} onMarkAsRead={markAllAsRead} />
+          <UserProfile user={user} onProfileUpdate={handleProfileUpdate} />
+        </div>
       </div>
 
       {/* Stats Cards */}
@@ -72,6 +112,8 @@ function AdminDashboard() {
           value={`RWF ${stats.totalPayments?.toLocaleString()}`}
           bgColor="bg-yellow-100"
           iconColor="text-yellow-600"
+          onClick={() => setShowPaymentAudit(!showPaymentAudit)}
+          buttonText="Payment Audit Trail"
         />
         <StatCard
           icon="✅"
@@ -239,28 +281,33 @@ function AdminDashboard() {
           </div>
         </div>
 
-        {/* Pending Claims */}
-        <div className="bg-white rounded-lg p-6 shadow-sm border">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Pending Claims</h2>
-          <div className="space-y-4">
-            {pendingClaims.map((claim, index) => (
-              <div key={index} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                <div>
-                  <p className="font-medium text-gray-900">{claim.hospital}</p>
-                  <p className="text-sm text-gray-500">Claim: {claim.claim}</p>
-                  <p className="text-sm font-medium text-gray-900">{claim.amount}</p>
-                </div>
-                <button className="px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700">
-                  View
-                </button>
-              </div>
-            ))}
-          </div>
+        {/* Pie Chart */}
+        <div className="lg:col-span-1">
+          <PieChartCard title="Payments Distribution" />
         </div>
       </div>
 
-      {/* Bottom Grid - User Activity & Recent Payments */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Pending Claims */}
+      <div className="bg-white rounded-lg p-6 shadow-sm border">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Pending Claims</h2>
+        <div className="space-y-4">
+          {pendingClaims.map((claim, index) => (
+            <div key={index} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+              <div>
+                <p className="font-medium text-gray-900">{claim.hospital}</p>
+                <p className="text-sm text-gray-500">Claim: {claim.claim}</p>
+                <p className="text-sm font-medium text-gray-900">{claim.amount}</p>
+              </div>
+              <button className="px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700">
+                View
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Bottom Grid - User Activity */}
+      <div className="grid grid-cols-1 gap-6">
         {/* User Activity */}
         <div className="bg-white rounded-lg p-6 shadow-sm border">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">User Activity</h2>
@@ -281,42 +328,23 @@ function AdminDashboard() {
             ))}
           </div>
         </div>
+      </div>
 
-        {/* Recent Payments */}
-        <div className="bg-white rounded-lg p-6 shadow-sm border">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Recent Payments</h2>
-            <button className="text-sm text-blue-600 hover:text-blue-700">Export</button>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="text-left text-gray-500 border-b">
-                  <th className="pb-2">User</th>
-                  <th className="pb-2">Payment For</th>
-                  <th className="pb-2">Amount</th>
-                  <th className="pb-2">Date</th>
-                  <th className="pb-2"></th>
-                </tr>
-              </thead>
-              <tbody className="space-y-2">
-                {recentPayments.map((payment, index) => (
-                  <tr key={index} className="border-b border-gray-100">
-                    <td className="py-2 font-medium text-gray-900">{payment.user}</td>
-                    <td className="py-2 text-gray-600">{payment.purpose}</td>
-                    <td className="py-2 font-medium text-gray-900">{payment.amount}</td>
-                    <td className="py-2 text-gray-500">{payment.date}</td>
-                    <td className="py-2">
-                      <button className="px-2 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700">
-                        View
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+      {/* Payment Audit Trail */}
+      {showPaymentAudit && (
+        <div className="mt-6">
+          <PaymentAuditTrail />
         </div>
+      )}
+
+      {/* Payment Audit Trail */}
+      <div className="mt-6">
+        <PaymentAuditTrail />
+      </div>
+
+      {/* Fraud Detection & AI Analysis */}
+      <div className="mt-6">
+        <FraudDetection />
       </div>
     </div>
   );

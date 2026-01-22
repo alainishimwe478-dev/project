@@ -14,10 +14,6 @@ const AdminLayout = ({ children }) => {
             <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">R</span>
             </div>
-            <div>
-              <h1 className="text-xl font-semibold text-gray-900">RSSB HealthPay</h1>
-              <p className="text-sm text-gray-500">Admin Dashboard</p>
-            </div>
           </div>
           <div className="flex items-center space-x-4">
             {/* Notifications */}
@@ -33,15 +29,6 @@ const AdminLayout = ({ children }) => {
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
                 <span className="text-sm font-medium text-gray-600">A</span>
-              </div>
-              <div className="hidden md:block">
-                <p className="text-sm font-medium text-gray-900">Admin</p>
-                <button
-                  onClick={logout}
-                  className="text-xs text-gray-500 hover:text-gray-700"
-                >
-                  Logout
-                </button>
               </div>
               <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />

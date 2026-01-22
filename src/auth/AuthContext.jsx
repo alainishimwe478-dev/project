@@ -4,8 +4,14 @@ const AuthContext = createContext();
 
 // Admin credentials
 const ADMIN_CREDENTIALS = {
-  id: "1199980076099093",
+  email: "alainishimwe478@gmail.com",
   password: "admin123",
+};
+
+// User credentials
+const USER_CREDENTIALS = {
+  email: "claude@gmail.com",
+  password: "claude123",
 };
 
 // Role permissions
@@ -29,18 +35,27 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const login = (id, password) => {
+  const login = (email, password) => {
     if (
-      id === ADMIN_CREDENTIALS.id &&
+      email === ADMIN_CREDENTIALS.email &&
       password === ADMIN_CREDENTIALS.password
     ) {
-      const userData = { id, role: "ADMIN" };
+      const userData = { email, role: "ADMIN" };
       setUser(userData);
       setRole("ADMIN");
       localStorage.setItem("user", JSON.stringify(userData));
-      return true;
+      return { success: true, role: "ADMIN" };
+    } else if (
+      email === USER_CREDENTIALS.email &&
+      password === USER_CREDENTIALS.password
+    ) {
+      const userData = { email, role: "USER" };
+      setUser(userData);
+      setRole("USER");
+      localStorage.setItem("user", JSON.stringify(userData));
+      return { success: true, role: "USER" };
     }
-    return false;
+    return { success: false };
   };
 
   const logout = () => {

@@ -14,6 +14,16 @@ import AuthCard from "./components/AuthCard";
 import AdminLayout from "./admin/AdminLayout";
 import AdminDashboard from "./components/AdminDashboard";
 import AdminUsers from "./components/AdminUsers";
+import Payments from "./admin/Payments";
+import AdminReports from "./admin/AdminReports";
+import Notifications from "./admin/Notifications";
+import AdminSettings from "./admin/AdminSettings";
+import Invoices from "./admin/Invoices";
+import AIFeaturesDashboard from "./admin/AIFeaturesDashboard";
+import Login from "./pages/Login";
+import SlidingLogin from "./pages/SlidingLogin";
+import ModernLogin from "./pages/ModernLogin";
+import Dashboard from "./pages/Dashboard";
 
 // Import CSS for global styles
 import './App.css';
@@ -28,7 +38,8 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          <Route path="/" element={<AuthCard />} />
+          <Route path="/" element={<SlidingLogin />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route
             path="/admin"
             element={
@@ -54,10 +65,17 @@ function App() {
             element={
               <RoleRoute permission="dashboard">
                 <AdminLayout>
-                  <div className="p-6">
-                    <h1 className="text-2xl font-bold text-gray-900">Payments</h1>
-                    <p className="text-gray-600 mt-2">Payment management interface coming soon...</p>
-                  </div>
+                  <Payments />
+                </AdminLayout>
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/admin/invoices"
+            element={
+              <RoleRoute permission="dashboard">
+                <AdminLayout>
+                  <Invoices />
                 </AdminLayout>
               </RoleRoute>
             }
@@ -67,10 +85,17 @@ function App() {
             element={
               <RoleRoute permission="analytics">
                 <AdminLayout>
-                  <div className="p-6">
-                    <h1 className="text-2xl font-bold text-gray-900">Reports</h1>
-                    <p className="text-gray-600 mt-2">Analytics and reporting interface coming soon...</p>
-                  </div>
+                  <AdminReports />
+                </AdminLayout>
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/admin/ai-features"
+            element={
+              <RoleRoute permission="dashboard">
+                <AdminLayout>
+                  <AIFeaturesDashboard />
                 </AdminLayout>
               </RoleRoute>
             }
@@ -80,10 +105,7 @@ function App() {
             element={
               <RoleRoute permission="dashboard">
                 <AdminLayout>
-                  <div className="p-6">
-                    <h1 className="text-2xl font-bold text-gray-900">Notifications</h1>
-                    <p className="text-gray-600 mt-2">Notification management coming soon...</p>
-                  </div>
+                  <Notifications />
                 </AdminLayout>
               </RoleRoute>
             }
@@ -93,10 +115,7 @@ function App() {
             element={
               <RoleRoute permission="settings">
                 <AdminLayout>
-                  <div className="p-6">
-                    <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
-                    <p className="text-gray-600 mt-2">System settings interface coming soon...</p>
-                  </div>
+                  <AdminSettings />
                 </AdminLayout>
               </RoleRoute>
             }

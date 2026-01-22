@@ -14,6 +14,7 @@ export default function Sidebar() {
     { to: "/admin", icon: "📊", label: "Dashboard" },
     { to: "/admin/users", icon: "👥", label: "Users" },
     { to: "/admin/payments", icon: "💳", label: "Payments" },
+    { to: "/admin/invoices", icon: "🧾", label: "Invoices" },
     { to: "/admin/reports", icon: "📈", label: "Reports" },
     { to: "/admin/notifications", icon: "🔔", label: "Notifications" },
     { to: "/admin/settings", icon: "⚙️", label: "Settings" },
