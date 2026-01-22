@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
 import { predictPaymentRisk, calculatePredictionStats, getAIRecommendedActions } from '../utils/paymentPrediction';
 
 function HealthPayAI({ onClose }) {
-  const navigate = useNavigate();
   const [citizens, setCitizens] = useState([]);
   const [selectedCitizen, setSelectedCitizen] = useState(null);
   const [aiPredictions, setAiPredictions] = useState({
@@ -103,7 +101,7 @@ function HealthPayAI({ onClose }) {
       predictedDefaulters: predictionStats.predictedDefaulters,
       totalRevenue: mockCitizens.reduce((sum, c) => sum + (c.amountDue || 0), 0)
     });
-  }, []);
+  }, [onClose]);
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -181,8 +179,11 @@ function HealthPayAI({ onClose }) {
         <div className="bg-blue-600 text-white p-4 rounded-t-lg">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold">🤖 HealthPay AI Dashboard</h3>
-            <button onClick={onClose} className="text-white hover:text-gray-200 text-xl">
-              ×
+            <button
+              onClick={onClose}
+              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+            >
+              Cancel
             </button>
           </div>
         </div>
@@ -396,7 +397,7 @@ function HealthPayAI({ onClose }) {
 
               <div className="mt-6 flex space-x-3">
                 <button
-                  onClick={() => setSelectedCitizen(null)}
+                  onClick={onClose}
                   className="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-md font-medium transition-colors"
                 >
                   Cancel

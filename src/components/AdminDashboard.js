@@ -1,41 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HealthPayAI from './HealthPayAI';
-import { detectFakePayment, getPaymentStats, generateAIAlert, mockPayments } from '../utils/fraudDetection';
+import Navbar from './Navbar';
 
 function AdminDashboard() {
   const navigate = useNavigate();
   const [showHealthPayAI, setShowHealthPayAI] = useState(false);
-  const [paymentStats, setPaymentStats] = useState({
-    total: 0,
-    real: 0,
-    fake: 0,
-    suspicious: 0,
-    totalAmount: 0,
-    realAmount: 0,
-    fakeAmount: 0
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    totalHospitals: 0,
+    totalClaims: 0,
+    totalPayments: 0,
+    totalPaidAmount: { _sum: { amount: 0 } }
   });
-  const [aiAlerts, setAiAlerts] = useState([]);
-  const [recentPayments, setRecentPayments] = useState([]);
+  const [recentClaims, setRecentClaims] = useState([]);
+  const [fraudClaims, setFraudClaims] = useState([]);
 
   useEffect(() => {
-    // Load and analyze payment data
-    const stats = getPaymentStats(mockPayments);
-    setPaymentStats(stats);
+    // Fetch admin stats
+    fetch("http://localhost:5000/api/admin/stats")
+      .then(res => res.json())
+      .then(setStats)
+      .catch(console.error);
 
-    // Generate AI alerts for suspicious payments
-    const alerts = [];
-    mockPayments.forEach(payment => {
-      const result = detectFakePayment(payment);
-      const alert = generateAIAlert(payment, result);
-      if (alert) {
-        alerts.push(alert);
-      }
-    });
-    setAiAlerts(alerts);
+    // Fetch recent claims
+    fetch("http://localhost:5000/api/admin/recent-claims")
+      .then(res => res.json())
+      .then(setRecentClaims)
+      .catch(console.error);
 
-    // Set recent payments for display
-    setRecentPayments(mockPayments.slice(-5).reverse());
+    // Fetch fraud claims
+    fetch("http://localhost:5000/api/admin/fraud-claims")
+      .then(res => res.json())
+      .then(setFraudClaims)
+      .catch(console.error);
   }, []);
 
   const handleLogout = () => {
@@ -46,6 +44,11 @@ function AdminDashboard() {
   return (
     <div className="min-h-screen bg-gray-50 animate-fade-in">
       <nav className="bg-white shadow">
+        <div className="flex-1 flex flex-col">
+          <Navbar
+            onHealthPayAIClick={() => setShowHealthPayAI(true)}
+          />
+        </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex">
@@ -98,7 +101,7 @@ function AdminDashboard() {
                         Total Users
                       </dt>
                       <dd className="text-lg font-medium text-gray-900">
-                        1,234
+                        {stats.totalUsers.toLocaleString()}
                       </dd>
                     </dl>
                   </div>
@@ -119,10 +122,10 @@ function AdminDashboard() {
                   <div className="ml-5 w-0 flex-1">
                     <dl>
                       <dt className="text-sm font-medium text-gray-500 truncate">
-                        Active Users
+                        Hospitals
                       </dt>
                       <dd className="text-lg font-medium text-gray-900">
-                        987
+                        {stats.totalHospitals.toLocaleString()}
                       </dd>
                     </dl>
                   </div>
@@ -192,54 +195,45 @@ function AdminDashboard() {
                 Recent Activity
               </h3>
               <div className="space-y-4">
-                <div className="flex items-center space-x-4">
-                  <div className="flex-shrink-0">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                {recentClaims.slice(0, 3).map((claim, index) => (
+                  <div key={claim.id} className="flex items-center space-x-4">
+                    <div className="flex-shrink-0">
+                      <div className={`w-2 h-2 rounded-full ${claim.aiRisk === 'HIGH' ? 'bg-red-400' : 'bg-green-400'}`}></div>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900 truncate">
+                        Claim Submitted - {claim.user?.name || 'Unknown User'}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Amount: RWF {claim.amount} • Risk: {claim.aiRisk}
+                      </p>
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      {new Date(claim.createdAt).toLocaleDateString()}
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">
-                      New user registration
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      User ID: 12345 registered successfully
-                    </p>
+                ))}
+                {fraudClaims.slice(0, 2).map((claim, index) => (
+                  <div key={`fraud-${claim.id}`} className="flex items-center space-x-4">
+                    <div className="flex-shrink-0">
+                      <div className="w-2 h-2 bg-red-400 rounded-full"></div>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-red-900 truncate">
+                        ⚠️ Fraud Alert - {claim.user?.name || 'Unknown User'}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        High-risk claim: RWF {claim.amount}
+                      </p>
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      {new Date(claim.createdAt).toLocaleDateString()}
+                    </div>
                   </div>
-                  <div className="text-sm text-gray-500">
-                    2 hours ago
-                  </div>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <div className="flex-shrink-0">
-                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">
-                      Payment processed
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Payment of $150.00 completed
-                    </p>
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    4 hours ago
-                  </div>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <div className="flex-shrink-0">
-                    <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">
-                      System maintenance
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Scheduled maintenance completed
-                    </p>
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    1 day ago
-                  </div>
-                </div>
+                ))}
+                {recentClaims.length === 0 && fraudClaims.length === 0 && (
+                  <p className="text-gray-500 text-sm">No recent activity</p>
+                )}
               </div>
             </div>
           </div>

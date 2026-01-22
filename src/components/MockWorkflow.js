@@ -13,7 +13,6 @@ function MockWorkflow() {
     }
   ]);
   const [currentStep, setCurrentStep] = useState('household');
-  const [receipt, setReceipt] = useState(null);
   const [history, setHistory] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
@@ -102,7 +101,6 @@ function MockWorkflow() {
         const data = await res.json();
 
         if (data.success) {
-          setReceipt(data.receipt);
           fetchHistory();
           addMessage("Payment successful! Here's your receipt:", 'bot', 'success');
           addMessage(`Receipt ID: ${data.receipt.id}\nHousehold: ${data.receipt.household.join(", ")}\nAmount: RWF ${data.receipt.amount}\nDate: ${data.receipt.date}`, 'bot', 'receipt');
@@ -114,7 +112,6 @@ function MockWorkflow() {
 
   const handleRestart = () => {
     setHousehold(["Self"]);
-    setReceipt(null);
     setCurrentStep('household');
     addMessage("Let's start over. How many family members need coverage?", 'bot', 'question');
   };

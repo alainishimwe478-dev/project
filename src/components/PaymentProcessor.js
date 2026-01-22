@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { detectFakePayment } from '../utils/fraudDetection';
 
 function PaymentProcessor({ isOpen, onClose, onPaymentSuccess }) {
   const [paymentData, setPaymentData] = useState({
@@ -11,6 +12,7 @@ function PaymentProcessor({ isOpen, onClose, onPaymentSuccess }) {
   });
   const [step, setStep] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [aiVerification, setAiVerification] = useState(null);
 
   const handleInputChange = (e) => {
     setPaymentData({ ...paymentData, [e.target.name]: e.target.value });
@@ -23,14 +25,36 @@ function PaymentProcessor({ isOpen, onClose, onPaymentSuccess }) {
 
   const handlePaymentSubmit = async () => {
     setIsProcessing(true);
-    setStep(3);
+    setStep(4);
+    setAiVerification(null);
 
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    onPaymentSuccess(paymentData.amount);
-    onClose();
+    // Simulate AI verification delay
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    // Run AI fraud detection
+    const mockPayment = {
+      amount: parseFloat(paymentData.amount),
+      method: paymentData.method,
+      timeSinceLastPayment: Math.random() * 3600000, // Random time in last hour
+    };
+    const verificationResult = detectFakePayment(mockPayment);
+    setAiVerification(verificationResult);
+
+    // If verified, proceed to processing
+    if (verificationResult.status === 'REAL') {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setStep(3);
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      onPaymentSuccess(paymentData.amount);
+      onClose();
+    } else {
+      setIsProcessing(false);
+    }
   };
 
   const quickAmounts = [25, 45, 75, 100, 150];
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -207,6 +231,44 @@ function PaymentProcessor({ isOpen, onClose, onPaymentSuccess }) {
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
               <h4 className="text-lg font-medium text-gray-900">Processing Payment...</h4>
               <p className="text-gray-600">Please wait while we process your payment securely.</p>
+            </div>
+          )}
+
+          {step === 4 && (
+            <div className="text-center space-y-6">
+              <div className="flex items-center justify-center space-x-2">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <span className="text-lg font-medium text-gray-900">🤖 AI Verification</span>
+              </div>
+              <div className="bg-gray-50 rounded-lg p-4">
+                <p className="text-sm text-gray-600 mb-2">Analyzing payment for security...</p>
+                <div className="flex justify-center space-x-2">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Checking Amount</span>
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Validating Method</span>
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">Risk Assessment</span>
+                </div>
+              </div>
+              {aiVerification && (
+                <div className={`rounded-lg p-4 ${aiVerification.status === 'REAL' ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}>
+                  <div className="flex items-center justify-center space-x-2">
+                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                      aiVerification.status === 'REAL' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    }`}>
+                      {aiVerification.status === 'REAL' ? '✅ Verified' : '❌ Flagged'}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-600 mt-2">{aiVerification.reason}</p>
+                  <p className="text-xs text-gray-500">Confidence: {aiVerification.confidence}%</p>
+                  {aiVerification.status === 'FAKE' && (
+                    <button
+                      onClick={() => setStep(2)}
+                      className="mt-4 w-full bg-gradient-to-r from-red-500 to-red-600 text-white py-2 px-4 rounded-lg hover:from-red-600 hover:to-red-700 transition-all font-medium shadow-lg"
+                    >
+                      Try Different Payment Method
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>

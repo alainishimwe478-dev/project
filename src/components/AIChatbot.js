@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 function AIChatbot({ isOpen, onClose }) {
-  const navigate = useNavigate();
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -44,7 +42,6 @@ function AIChatbot({ isOpen, onClose }) {
   // Enhanced AI responses with context awareness
   const getAIResponse = (userMessage) => {
     const lowerMessage = userMessage.toLowerCase();
-    const context = conversationContext;
 
     // Language detection
     if (lowerMessage.includes('muraho') || lowerMessage.includes('amahoro') || lowerMessage.includes('kinyarwanda')) {
@@ -154,6 +151,93 @@ function AIChatbot({ isOpen, onClose }) {
       e.preventDefault();
       handleSendMessage();
     }
+  };
+
+  const handleQuickAction = (action) => {
+    let simulatedMessage = '';
+
+    switch (action) {
+      case 'pay_now':
+        simulatedMessage = 'I want to make a payment now';
+        break;
+      case 'setup_auto':
+        simulatedMessage = 'How do I set up automatic payments?';
+        break;
+      case 'payment_history':
+        simulatedMessage = 'Show me my payment history';
+        break;
+      case 'new_claim':
+        simulatedMessage = 'I want to submit a new claim';
+        break;
+      case 'track_claims':
+        simulatedMessage = 'Track my existing claims';
+        break;
+      case 'coverage_details':
+        simulatedMessage = 'Tell me about my coverage details';
+        break;
+      case 'view_details':
+        simulatedMessage = 'View my coverage details';
+        break;
+      case 'family_coverage':
+        simulatedMessage = 'Tell me about family coverage';
+        break;
+      case 'premium_info':
+        simulatedMessage = 'Premium information';
+        break;
+      case 'view_history':
+        simulatedMessage = 'View my account history';
+        break;
+      case 'update_info':
+        simulatedMessage = 'Update my information';
+        break;
+      case 'contact_human':
+        simulatedMessage = 'I need to speak to a human representative';
+        break;
+      case 'payments':
+        simulatedMessage = 'Tell me about payments';
+        break;
+      case 'claims':
+        simulatedMessage = 'Tell me about claims';
+        break;
+      case 'coverage':
+        simulatedMessage = 'Tell me about coverage';
+        break;
+      case 'account':
+        simulatedMessage = 'Account status';
+        break;
+      case 'help':
+        simulatedMessage = 'I need help';
+        break;
+      default:
+        simulatedMessage = action;
+    }
+
+    // Simulate user clicking the action button
+    setInputMessage(simulatedMessage);
+    handleSendMessage();
+  };
+
+  const getActionLabel = (action) => {
+    const labels = {
+      pay_now: '💳 Pay Now',
+      setup_auto: '🔄 Auto Pay',
+      payment_history: '📋 History',
+      new_claim: '📝 New Claim',
+      track_claims: '🔍 Track Claims',
+      coverage_details: '📋 Coverage',
+      view_details: '👁️ View Details',
+      family_coverage: '👨‍👩‍👧‍👦 Family',
+      premium_info: '💰 Premium',
+      view_history: '📈 History',
+      update_info: '✏️ Update Info',
+      contact_human: '👤 Human Help',
+      payments: '💳 Payments',
+      claims: '🏥 Claims',
+      coverage: '🛡️ Coverage',
+      account: '👤 Account',
+      help: '❓ Help'
+    };
+    return labels[action] || action;
   };
 
   if (!isOpen) return null;

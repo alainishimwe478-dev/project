@@ -1,150 +1,87 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { login } from '../utils/auth';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { login } from "../utils/auth";
+import Rocket from "./Rocket";
 
-function Login() {
-  const [formData, setFormData] = useState({
-    nationalId: '',
-    password: '',
-    role: 'User'
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [showPassword, setShowPassword] = useState(false);
+export default function Login() {
+  const [id, setId] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Check if user is already logged in
-    const user = JSON.parse(localStorage.getItem('user') || 'null');
-    if (user) {
-      navigate(`/${user.role.toLowerCase()}-dashboard`);
-    }
-  }, [navigate]);
+  const ADMIN_ID = "1199980076099093";
+  const ADMIN_PASSWORD = "admin123";
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.nationalId.trim()) {
-      newErrors.nationalId = 'National ID is required';
-    } else if (formData.nationalId.length < 16) {
-      newErrors.nationalId = 'National ID must be at least 16 characters';
-    }
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setErrors({});
-
-    if (!validateForm()) {
+  const handleLogin = () => {
+    if (!id || !password) {
+      setError("All fields are required");
       return;
     }
 
-    setIsLoading(true);
-
-    try {
-      // Call login function with fraud check
-      const user = await login(formData.nationalId, formData.password);
-
-      // Store user data in localStorage
-      localStorage.setItem('user', JSON.stringify(user));
-
-      // Navigate to appropriate dashboard based on role
-      navigate(`/${user.role.toLowerCase()}-dashboard`);
-    } catch (error) {
-      setErrors({ general: error.message });
-    } finally {
-      setIsLoading(false);
+    if (id === ADMIN_ID && password === ADMIN_PASSWORD) {
+      login({ id, role: "Admin" });
+      navigate("/admin-dashboard");
+    } else {
+      setError("Invalid credentials");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 animate-fade-in">
-        <div className="text-center">
-          <div className="mb-8">
-            <div className="mx-auto h-24 w-24 bg-white rounded-full flex items-center justify-center mb-4 shadow-xl border-4 border-blue-100">
-              <div className="text-center">
-                <div className="text-xl font-bold text-blue-700 leading-tight">RSSB</div>
-                <div className="w-8 h-0.5 bg-blue-600 mx-auto mt-1"></div>
-                <div className="text-xs text-blue-600 font-semibold mt-1 tracking-wider">HEALTHPAY</div>
-              </div>
-            </div>
-            <h1 className="text-2xl font-bold text-white mb-2">RSSB HealthPay</h1>
-            <p className="text-blue-100 text-sm">Rwanda Social Security Board</p>
-          </div>
-          <h2 className="text-2xl font-bold text-white">
-            Sign in to your account
-          </h2>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <input type="hidden" name="remember" value="true" />
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="nationalId" className="sr-only">
-                National ID
-              </label>
-              <input
-                id="nationalId"
-                name="nationalId"
-                type="text"
-                autoComplete="nationalId"
-                required
-                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="National ID"
-                value={formData.nationalId}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
-                value={formData.password}
-                onChange={handleChange}
-              />
-            </div>
+    <div className="min-h-screen flex items-center justify-center 
+      bg-gradient-to-b from-[#1e3c72] to-[#2a5298] relative overflow-hidden">
 
-          </div>
+      <Rocket />
 
-          <div>
-            <button
-              type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Sign in
-            </button>
-          </div>
-        </form>
+      <div className="absolute bottom-[-60px] w-full h-[200px] bg-white rounded-t-[100%]" />
 
-        <div className="text-center">
-          <p className="text-sm text-gray-600">
-            Don't have an account?{' '}
-            <Link to="/signup" className="font-medium text-blue-600 hover:text-blue-500">
-              Sign up here
-            </Link>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6 }}
+        className="relative z-10 w-[340px] bg-white/10 backdrop-blur-xl 
+          rounded-2xl p-8 text-white shadow-2xl"
+      >
+        <h2 className="text-xl font-semibold text-center tracking-wide">
+          USER LOGIN
+        </h2>
+        <p className="text-sm text-white/70 text-center mb-6">
+          Welcome to RSSB HealthPay
+        </p>
+
+        <input
+          className="input"
+          placeholder="Enter your ID"
+          onChange={(e) => {
+            setId(e.target.value);
+            setError("");
+          }}
+        />
+
+        <input
+          type="password"
+          className="input"
+          placeholder="Enter your password"
+          onChange={(e) => {
+            setPassword(e.target.value);
+            setError("");
+          }}
+        />
+
+        {error && (
+          <p className="text-red-400 text-xs mb-3 text-center">
+            {error}
           </p>
-        </div>
-      </div>
+        )}
+
+        <button
+          onClick={handleLogin}
+          className="w-full py-3 rounded-full bg-yellow-400 
+            text-black font-semibold hover:bg-yellow-500 transition"
+        >
+          LOGIN
+        </button>
+      </motion.div>
     </div>
   );
 }
-
-export default Login;

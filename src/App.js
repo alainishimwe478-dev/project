@@ -7,49 +7,16 @@
  */
 
 // Import React and necessary components from React Router
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-
-// Import component files without file extensions for safer, bundler-agnostic imports
-// This avoids issues with file extensions and allows bundlers to resolve .js or .jsx automatically
-import Login from './components/Login';
-import Signup from './components/Signup';
-import UserDashboard from './components/UserDashboard';
-import AdminDashboard from './components/AdminDashboard';
-import OfficerDashboard from './components/OfficerDashboard';
-import AdminUsers from './components/AdminUsers';
-import MockWorkflow from './components/MockWorkflow';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./auth/AuthContext";
+import RoleRoute from "./auth/RoleRoute";
+import AuthCard from "./components/AuthCard";
+import AdminLayout from "./admin/AdminLayout";
+import AdminDashboard from "./components/AdminDashboard";
+import AdminUsers from "./components/AdminUsers";
 
 // Import CSS for global styles
 import './App.css';
-
-/**
- * ProtectedRoute Component
- *
- * A wrapper component that checks if the user is authenticated and has the required role
- * before rendering the protected content. If not, redirects to the login page.
- *
- * @param {Object} props - Component props
- * @param {ReactNode} props.children - The component to render if access is allowed
- * @param {Array<string>} props.allowedRoles - Array of roles that can access this route
- */
-function ProtectedRoute({ children, allowedRoles }) {
-  // Retrieve user data from localStorage (consider using a more secure method in production)
-  let user = null;
-  try {
-    user = JSON.parse(localStorage.getItem('user') || 'null');
-  } catch (e) {
-    user = null;
-  }
-
-  // If no user is logged in or user's role is not in the allowed roles, redirect to login
-  if (!user || !allowedRoles.includes(user.role)) {
-    return <Navigate to="/login" />;
-  }
-
-  // If checks pass, render the protected content
-  return children;
-}
 
 /**
  * App Component
@@ -58,63 +25,33 @@ function ProtectedRoute({ children, allowedRoles }) {
  */
 function App() {
   return (
-    <Router>
-      <div className="App">
+    <BrowserRouter>
+      <AuthProvider>
         <Routes>
-          {/* Public route for user login */}
-          <Route path="/login" element={<Login />} />
-
-          {/* Public route for user signup/activation */}
-          <Route path="/signup" element={<Signup />} />
-
-          {/* Protected route for regular users - only accessible by 'User' role */}
+          <Route path="/" element={<AuthCard />} />
           <Route
-            path="/user-dashboard"
+            path="/admin"
             element={
-              <ProtectedRoute allowedRoles={['User']}>
-                <UserDashboard />
-              </ProtectedRoute>
+              <RoleRoute permission="dashboard">
+                <AdminLayout>
+                  <AdminDashboard />
+                </AdminLayout>
+              </RoleRoute>
             }
           />
-
-          {/* Protected route for admin dashboard - accessible by 'Admin' and 'Officer' roles */}
           <Route
-            path="/admin-dashboard"
+            path="/admin/users"
             element={
-              <ProtectedRoute allowedRoles={['Admin', 'Officer']}>
-                <AdminDashboard />
-              </ProtectedRoute>
+              <RoleRoute permission="users">
+                <AdminLayout>
+                  <AdminUsers />
+                </AdminLayout>
+              </RoleRoute>
             }
           />
-
-          {/* Protected route for officer dashboard - only accessible by 'Officer' role */}
-          <Route
-            path="/officer-dashboard"
-            element={
-              <ProtectedRoute allowedRoles={['Officer']}>
-                <OfficerDashboard />
-              </ProtectedRoute>
-            }
-          />
-
-          {/* Protected route for admin users management - only accessible by 'Admin' role */}
-          <Route
-            path="/admin-users"
-            element={
-              <ProtectedRoute allowedRoles={['Admin']}>
-                <AdminUsers />
-              </ProtectedRoute>
-            }
-          />
-
-          {/* Mock Workflow route - public for demo */}
-          <Route path="/mock-workflow" element={<MockWorkflow />} />
-
-          {/* Default route - redirects to login */}
-          <Route path="/" element={<Navigate to="/login" />} />
         </Routes>
-      </div>
-    </Router>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 

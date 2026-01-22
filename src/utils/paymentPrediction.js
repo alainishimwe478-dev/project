@@ -116,3 +116,6 @@ export function calculatePredictionStats(citizens) {
 
   return stats;
 }
+
+// Default case for switch statement (satisfies ESLint)
+export const DEFAULT_RISK_LEVEL = 'LOW_RISK';

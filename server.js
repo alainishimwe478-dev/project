@@ -1,10 +1,13 @@
+
 const express = require("express");
 const cors = require("cors");
+const { PrismaClient } = require("@prisma/client");
+
 const app = express();
+const prisma = new PrismaClient();
+
 app.use(cors());
 app.use(express.json());
-
-let paymentHistory = []; // store mock payment records
 
 // Mock AI endpoint
 app.post("/ai/ask", (req, res) => {
@@ -31,10 +34,22 @@ app.post("/payment", (req, res) => {
 
   res.json({ success: true, receipt });
 });
-
 // Get Payment History
-app.get("/history", (req, res) => {
-  res.json(paymentHistory);
+app.get("/history", async (req, res) => {
+  try {
+    const payments = await prisma.payment.findMany({
+      include: { user: true },
+      orderBy: { createdAt: "desc" }
+    });
+    res.json(payments);
+  } catch (error) {
+    console.error("Error fetching payment history:", error);
+    res.status(500).json({ error: "Failed to fetch payment history" });
+  }
 });
+
+// Admin routes
+const adminRoutes = require("./routes/admin");
+app.use("/api/admin", adminRoutes);
 
 app.listen(5000, () => console.log("Server running on http://localhost:5000"));
