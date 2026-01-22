@@ -1,9 +1,14 @@
+import React from "react";
+import { useDarkMode } from "../contexts/DarkModeContext";
+
 export default function BalanceCard() {
+  const { isDark } = useDarkMode();
+
   return (
     <div className="mt-6 bg-gradient-to-r from-blue-600 to-blue-500 
       rounded-2xl p-6 text-white shadow-lg">
 
-      <p className="text-sm">Coverage Balance</p>
+      <p className="text-sm opacity-90">Coverage Balance</p>
 
       <h2 className="text-3xl font-bold mt-2">
         RWF 150,000

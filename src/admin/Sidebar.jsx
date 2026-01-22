@@ -7,13 +7,14 @@ export default function Sidebar() {
 
   const handleLogout = () => {
     logout();
-    navigate("/");
+    window.location.href = '/login';
   };
 
   const navItems = [
     { to: "/admin", icon: "📊", label: "Dashboard" },
     { to: "/admin/users", icon: "👥", label: "Users" },
     { to: "/admin/payments", icon: "💳", label: "Payments" },
+    { to: "/admin/ai-control", icon: "🤖", label: "AI Control" },
     { to: "/admin/invoices", icon: "🧾", label: "Invoices" },
     { to: "/admin/reports", icon: "📈", label: "Reports" },
     { to: "/admin/notifications", icon: "🔔", label: "Notifications" },
@@ -21,7 +22,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="w-64 bg-white border-r border-gray-200 hidden md:block">
+    <aside className="w-64 bg-white border-r border-gray-200 min-h-screen">
       <nav className="p-4 space-y-2">
         {navItems.map((item) => (
           <NavLink
@@ -39,13 +40,16 @@ export default function Sidebar() {
             <span>{item.label}</span>
           </NavLink>
         ))}
-        <button
-          onClick={handleLogout}
-          className="flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 w-full transition-colors mt-4"
-        >
-          <span className="text-lg">🚪</span>
-          <span>Logout</span>
-        </button>
+        
+        <div className="pt-4 mt-4 border-t border-gray-200">
+          <button
+            onClick={handleLogout}
+            className="flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 hover:text-red-700 w-full transition-colors"
+          >
+            <span className="text-lg">🚪</span>
+            <span>Logout</span>
+          </button>
+        </div>
       </nav>
     </aside>
   );

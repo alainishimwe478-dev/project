@@ -5,6 +5,11 @@ import { useAuth } from "../auth/AuthContext";
 const AdminLayout = ({ children }) => {
   const { logout, user } = useAuth();
 
+  const handleLogout = () => {
+    logout();
+    window.location.href = '/login';
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -14,6 +19,7 @@ const AdminLayout = ({ children }) => {
             <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">R</span>
             </div>
+            <h1 className="text-xl font-semibold text-gray-900">RSSB HealthPay Admin</h1>
           </div>
           <div className="flex items-center space-x-4">
             {/* Notifications */}
@@ -30,9 +36,12 @@ const AdminLayout = ({ children }) => {
               <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
                 <span className="text-sm font-medium text-gray-600">A</span>
               </div>
-              <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
+              <button 
+                onClick={handleLogout}
+                className="px-3 py-1 bg-red-500 text-white rounded-lg text-sm hover:bg-red-600 transition-colors"
+              >
+                Logout
+              </button>
             </div>
           </div>
         </div>

@@ -9,7 +9,7 @@ export default function BottomNav() {
       isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
     }`}>
 
-      {["Home", "Payments", "History", "Profile"].map((item, index) => (
+      {["Home", "Payments", "Profile"].map((item, index) => (
         <button
           key={item}
           className={`text-sm flex flex-col items-center relative ${

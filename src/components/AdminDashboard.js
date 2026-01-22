@@ -151,100 +151,100 @@ function AdminDashboard() {
                 <option>This Year</option>
               </select>
             </div>
-            <div className="h-64 bg-gray-50 rounded-lg p-6">
-              <div className="h-full flex items-end justify-center space-x-4">
+            <div className="h-80 bg-gray-50 rounded-lg p-6">
+              <div className="h-full flex items-end justify-center space-x-6">
                 {/* Hospitals Bar */}
                 <div className="flex flex-col items-center">
-                  <div className="flex flex-col justify-end h-40">
+                  <div className="flex flex-col justify-end h-48">
                     <div 
                       className="bg-blue-500 rounded-t-lg transition-all duration-1000 ease-out flex items-end justify-center text-white text-xs font-medium"
-                      style={{ height: '140px', width: '45px' }}
+                      style={{ height: '140px', width: '55px' }}
                     >
                       <span className="mb-1">85%</span>
                     </div>
                   </div>
-                  <div className="text-center mt-2">
-                    <p className="text-xs font-medium text-gray-700">Hospitals</p>
+                  <div className="text-center mt-3">
+                    <p className="text-sm font-medium text-gray-700">Hospitals</p>
                     <p className="text-xs text-gray-500">RWF 680K</p>
                   </div>
                 </div>
 
                 {/* Clinics Bar */}
                 <div className="flex flex-col items-center">
-                  <div className="flex flex-col justify-end h-40">
+                  <div className="flex flex-col justify-end h-48">
                     <div 
                       className="bg-green-500 rounded-t-lg transition-all duration-1000 ease-out flex items-end justify-center text-white text-xs font-medium"
-                      style={{ height: '100px', width: '45px' }}
+                      style={{ height: '100px', width: '55px' }}
                     >
                       <span className="mb-1">60%</span>
                     </div>
                   </div>
-                  <div className="text-center mt-2">
-                    <p className="text-xs font-medium text-gray-700">Clinics</p>
+                  <div className="text-center mt-3">
+                    <p className="text-sm font-medium text-gray-700">Clinics</p>
                     <p className="text-xs text-gray-500">RWF 240K</p>
                   </div>
                 </div>
 
                 {/* Pharmacies Bar */}
                 <div className="flex flex-col items-center">
-                  <div className="flex flex-col justify-end h-40">
+                  <div className="flex flex-col justify-end h-48">
                     <div 
                       className="bg-purple-500 rounded-t-lg transition-all duration-1000 ease-out flex items-end justify-center text-white text-xs font-medium"
-                      style={{ height: '75px', width: '45px' }}
+                      style={{ height: '75px', width: '55px' }}
                     >
                       <span className="mb-1">45%</span>
                     </div>
                   </div>
-                  <div className="text-center mt-2">
-                    <p className="text-xs font-medium text-gray-700">Pharmacies</p>
+                  <div className="text-center mt-3">
+                    <p className="text-sm font-medium text-gray-700">Pharmacies</p>
                     <p className="text-xs text-gray-500">RWF 180K</p>
                   </div>
                 </div>
 
                 {/* Emergency Services Bar */}
                 <div className="flex flex-col items-center">
-                  <div className="flex flex-col justify-end h-40">
+                  <div className="flex flex-col justify-end h-48">
                     <div 
                       className="bg-red-500 rounded-t-lg transition-all duration-1000 ease-out flex items-end justify-center text-white text-xs font-medium"
-                      style={{ height: '120px', width: '45px' }}
+                      style={{ height: '120px', width: '55px' }}
                     >
                       <span className="mb-1">72%</span>
                     </div>
                   </div>
-                  <div className="text-center mt-2">
-                    <p className="text-xs font-medium text-gray-700">Emergency</p>
+                  <div className="text-center mt-3">
+                    <p className="text-sm font-medium text-gray-700">Emergency</p>
                     <p className="text-xs text-gray-500">RWF 290K</p>
                   </div>
                 </div>
 
                 {/* Specialist Services Bar */}
                 <div className="flex flex-col items-center">
-                  <div className="flex flex-col justify-end h-40">
+                  <div className="flex flex-col justify-end h-48">
                     <div 
                       className="bg-yellow-500 rounded-t-lg transition-all duration-1000 ease-out flex items-end justify-center text-white text-xs font-medium"
-                      style={{ height: '90px', width: '45px' }}
+                      style={{ height: '90px', width: '55px' }}
                     >
                       <span className="mb-1">55%</span>
                     </div>
                   </div>
-                  <div className="text-center mt-2">
-                    <p className="text-xs font-medium text-gray-700">Specialists</p>
+                  <div className="text-center mt-3">
+                    <p className="text-sm font-medium text-gray-700">Specialists</p>
                     <p className="text-xs text-gray-500">RWF 220K</p>
                   </div>
                 </div>
 
                 {/* Diagnostics Bar */}
                 <div className="flex flex-col items-center">
-                  <div className="flex flex-col justify-end h-40">
+                  <div className="flex flex-col justify-end h-48">
                     <div 
                       className="bg-indigo-500 rounded-t-lg transition-all duration-1000 ease-out flex items-end justify-center text-white text-xs font-medium"
-                      style={{ height: '65px', width: '45px' }}
+                      style={{ height: '65px', width: '55px' }}
                     >
                       <span className="mb-1">40%</span>
                     </div>
                   </div>
-                  <div className="text-center mt-2">
-                    <p className="text-xs font-medium text-gray-700">Diagnostics</p>
+                  <div className="text-center mt-3">
+                    <p className="text-sm font-medium text-gray-700">Diagnostics</p>
                     <p className="text-xs text-gray-500">RWF 160K</p>
                   </div>
                 </div>

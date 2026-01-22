@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 
 function AdminSettingsRealtime({ addNotification }) {
+  // --- Language Settings ---
+  const [systemLanguage, setSystemLanguage] = useState("English");
+  
   // --- Notification Settings ---
   const [emailAlerts, setEmailAlerts] = useState(true);
   const [smsAlerts, setSmsAlerts] = useState(false);
@@ -21,22 +24,26 @@ function AdminSettingsRealtime({ addNotification }) {
     }, 1000); // auto-save 1 second after change
 
     return () => clearTimeout(timer);
-  }, [emailAlerts, smsAlerts, pushNotifications, defaultView, theme, paymentLimit, autoMoMoDeduction]);
+  }, [systemLanguage, emailAlerts, smsAlerts, pushNotifications, defaultView, theme, paymentLimit, autoMoMoDeduction]);
 
   const saveSettings = () => {
     const settings = {
+      language: systemLanguage,
       notifications: { emailAlerts, smsAlerts, pushNotifications },
       dashboard: { defaultView, theme },
       system: { paymentLimit, autoMoMoDeduction },
     };
 
+    // Save to localStorage for system-wide language
+    localStorage.setItem('systemLanguage', systemLanguage);
+    
     // Simulate API save
     console.log("Settings auto-saved:", settings);
 
     // Trigger a notification in the admin dashboard
     if (addNotification) {
       addNotification({
-        message: "Admin settings updated successfully",
+        message: `Admin settings updated successfully - Language: ${systemLanguage}`,
         time: new Date().toLocaleTimeString(),
         read: false,
       });
@@ -44,12 +51,66 @@ function AdminSettingsRealtime({ addNotification }) {
   };
 
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Admin Settings (Realtime)</h1>
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold text-gray-900">Admin Settings</h1>
+
+      {/* System Language */}
+      <div className="bg-white rounded-lg p-6 shadow-sm border space-y-4">
+        <h2 className="text-lg font-semibold text-gray-900">🌍 System Language</h2>
+        <p className="text-sm text-gray-600">Set the default language for the entire RSSB HealthPay system</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <button
+            onClick={() => setSystemLanguage("English")}
+            className={`p-4 rounded-lg border-2 transition-colors ${
+              systemLanguage === "English"
+                ? "border-blue-500 bg-blue-50 text-blue-700"
+                : "border-gray-200 hover:border-gray-300"
+            }`}
+          >
+            <div className="text-2xl mb-2">🇺🇸</div>
+            <div className="font-medium">English</div>
+            <div className="text-sm text-gray-500">Default language</div>
+          </button>
+          
+          <button
+            onClick={() => setSystemLanguage("Kinyarwanda")}
+            className={`p-4 rounded-lg border-2 transition-colors ${
+              systemLanguage === "Kinyarwanda"
+                ? "border-blue-500 bg-blue-50 text-blue-700"
+                : "border-gray-200 hover:border-gray-300"
+            }`}
+          >
+            <div className="text-2xl mb-2">🇷🇼</div>
+            <div className="font-medium">Kinyarwanda</div>
+            <div className="text-sm text-gray-500">Ikinyarwanda</div>
+          </button>
+          
+          <button
+            onClick={() => setSystemLanguage("French")}
+            className={`p-4 rounded-lg border-2 transition-colors ${
+              systemLanguage === "French"
+                ? "border-blue-500 bg-blue-50 text-blue-700"
+                : "border-gray-200 hover:border-gray-300"
+            }`}
+          >
+            <div className="text-2xl mb-2">🇫🇷</div>
+            <div className="font-medium">Français</div>
+            <div className="text-sm text-gray-500">French language</div>
+          </button>
+        </div>
+        <div className="bg-blue-50 p-3 rounded-lg">
+          <p className="text-sm text-blue-800">
+            <strong>Current System Language:</strong> {systemLanguage}
+          </p>
+          <p className="text-xs text-blue-600 mt-1">
+            This will affect all users, admin panels, and system messages.
+          </p>
+        </div>
+      </div>
 
       {/* Notifications */}
       <div className="bg-white rounded-lg p-6 shadow-sm border space-y-4">
-        <h2 className="text-lg font-semibold text-gray-900">Notifications</h2>
+        <h2 className="text-lg font-semibold text-gray-900">🔔 Notifications</h2>
         <label className="flex items-center justify-between">
           <span>Email Alerts</span>
           <input type="checkbox" checked={emailAlerts} onChange={() => setEmailAlerts(!emailAlerts)} className="w-5 h-5" />
@@ -66,7 +127,7 @@ function AdminSettingsRealtime({ addNotification }) {
 
       {/* Dashboard */}
       <div className="bg-white rounded-lg p-6 shadow-sm border space-y-4">
-        <h2 className="text-lg font-semibold text-gray-900">Dashboard</h2>
+        <h2 className="text-lg font-semibold text-gray-900">📊 Dashboard</h2>
         <div className="flex flex-col md:flex-row md:space-x-6 space-y-4 md:space-y-0">
           <div className="flex-1">
             <label className="block text-sm font-medium text-gray-700">Default View</label>
@@ -90,7 +151,7 @@ function AdminSettingsRealtime({ addNotification }) {
 
       {/* System */}
       <div className="bg-white rounded-lg p-6 shadow-sm border space-y-4">
-        <h2 className="text-lg font-semibold text-gray-900">System</h2>
+        <h2 className="text-lg font-semibold text-gray-900">⚙️ System</h2>
         <div className="flex flex-col md:flex-row md:space-x-6 space-y-4 md:space-y-0">
           <div className="flex-1">
             <label className="block text-sm font-medium text-gray-700">Default Payment Limit (RWF)</label>
@@ -109,9 +170,11 @@ function AdminSettingsRealtime({ addNotification }) {
         </div>
       </div>
 
-      <p className="text-sm text-gray-500">
-        All changes are auto-saved in real-time.
-      </p>
+      <div className="bg-green-50 p-4 rounded-lg">
+        <p className="text-sm text-green-800">
+          ✅ All changes are auto-saved in real-time and applied system-wide.
+        </p>
+      </div>
     </div>
   );
 }
