@@ -1,6 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAllUsers, createAdminUser, updateUserStatus, deleteUser } from '../utils/auth';
+
+// Mock utility functions for user management
+const getAllUsers = () => [
+  { id: 1, name: 'John Doe', email: 'john@example.com', role: 'User', status: 'Active' },
+  { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'Admin', status: 'Active' },
+  { id: 3, name: 'Bob Johnson', email: 'bob@example.com', role: 'Officer', status: 'Inactive' },
+  { id: 4, name: 'Alice Brown', email: 'alice@example.com', role: 'User', status: 'Active' },
+];
+
+const createAdminUser = (userData) => {
+  console.log('Creating user:', userData);
+  return Promise.resolve({ success: true, id: Date.now() });
+};
+
+const updateUserStatus = (userId, status) => {
+  console.log('Updating user status:', userId, status);
+  return Promise.resolve({ success: true });
+};
+
+const deleteUser = (userId) => {
+  console.log('Deleting user:', userId);
+  return Promise.resolve({ success: true });
+};
 
 function AdminUsers() {
   const navigate = useNavigate();

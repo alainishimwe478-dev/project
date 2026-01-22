@@ -49,6 +49,58 @@ function App() {
               </RoleRoute>
             }
           />
+          <Route
+            path="/admin/payments"
+            element={
+              <RoleRoute permission="dashboard">
+                <AdminLayout>
+                  <div className="p-6">
+                    <h1 className="text-2xl font-bold text-gray-900">Payments</h1>
+                    <p className="text-gray-600 mt-2">Payment management interface coming soon...</p>
+                  </div>
+                </AdminLayout>
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/admin/reports"
+            element={
+              <RoleRoute permission="analytics">
+                <AdminLayout>
+                  <div className="p-6">
+                    <h1 className="text-2xl font-bold text-gray-900">Reports</h1>
+                    <p className="text-gray-600 mt-2">Analytics and reporting interface coming soon...</p>
+                  </div>
+                </AdminLayout>
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/admin/notifications"
+            element={
+              <RoleRoute permission="dashboard">
+                <AdminLayout>
+                  <div className="p-6">
+                    <h1 className="text-2xl font-bold text-gray-900">Notifications</h1>
+                    <p className="text-gray-600 mt-2">Notification management coming soon...</p>
+                  </div>
+                </AdminLayout>
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/admin/settings"
+            element={
+              <RoleRoute permission="settings">
+                <AdminLayout>
+                  <div className="p-6">
+                    <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
+                    <p className="text-gray-600 mt-2">System settings interface coming soon...</p>
+                  </div>
+                </AdminLayout>
+              </RoleRoute>
+            }
+          />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
