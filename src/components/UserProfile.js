@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function UserProfile({ user, onProfileUpdate }) {
   const [open, setOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
@@ -35,6 +37,11 @@ function UserProfile({ user, onProfileUpdate }) {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    navigate('/login');
   };
 
   const defaultUser = {
@@ -80,7 +87,7 @@ function UserProfile({ user, onProfileUpdate }) {
               </button>
               <button
                 onClick={handleUpload}
-                className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+                className="px-3 py-1 bg-[#003A8F] text-white rounded hover:bg-[#002F73]"
                 disabled={loading}
               >
                 {loading ? "Uploading..." : "Upload"}
@@ -98,6 +105,11 @@ function UserProfile({ user, onProfileUpdate }) {
             <li>
               <button className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm">
                 Settings
+              </button>
+            </li>
+            <li>
+              <button onClick={handleLogout} className="w-full text-left px-4 py-2 hover:bg-red-100 text-red-600 text-sm font-medium">
+                Logout
               </button>
             </li>
           </ul>

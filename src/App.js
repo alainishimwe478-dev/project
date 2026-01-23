@@ -5,6 +5,12 @@ import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import AdminDashboard from "./components/AdminDashboard";
 import HospitalDashboard from "./components/HospitalDashboard";
+import AdminReportsPage from "./pages/AdminReportsPage";
+import AdminSettings from "./pages/AdminSettings";
+import AdminAIControl from "./pages/AdminAIControl";
+import AdminInvoices from "./pages/AdminInvoices";
+import AdminNotifications from "./pages/AdminNotifications";
+import AdminPayments from "./pages/AdminPayments";
 
 // Import CSS for global styles
 import './App.css';
@@ -19,12 +25,12 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/hospital-dashboard" element={<HospitalDashboard />} />
-        <Route path="/admin-reports" element={<AdminDashboard />} />
-        <Route path="/admin-settings" element={<AdminDashboard />} />
-        <Route path="/ai-control-panel" element={<AdminDashboard />} />
-        <Route path="/invoices" element={<AdminDashboard />} />
-        <Route path="/notifications" element={<AdminDashboard />} />
-        <Route path="/payments" element={<AdminDashboard />} />
+        <Route path="/admin-reports" element={<AdminReportsPage />} />
+        <Route path="/admin-settings" element={<AdminSettings />} />
+        <Route path="/admin-ai-control" element={<AdminAIControl />} />
+        <Route path="/admin-invoices" element={<AdminInvoices />} />
+        <Route path="/admin-notifications" element={<AdminNotifications />} />
+        <Route path="/admin-payments" element={<AdminPayments />} />
       </Routes>
     </BrowserRouter>
   );

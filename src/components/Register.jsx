@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Sidebar from './Sidebar';
+import rssbLogo from '../images/images.png';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -25,13 +25,15 @@ export default function Register() {
   };
 
   return (
-    <div className="flex">
-      <Sidebar />
-      <div className="flex-1 min-h-screen bg-gray-50 flex items-center justify-center py-12">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12">
       <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900">Join HealthPay AI</h2>
-          <p className="text-gray-600 mt-2">Create your account</p>
+          <img
+            src={rssbLogo}
+            alt="RSSB Logo"
+            className="h-16 mx-auto mb-4 object-contain"
+          />
+          <h2 className="text-3xl font-bold text-gray-900">HealthPay AI</h2>
         </div>
         
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -109,7 +111,7 @@ export default function Register() {
           
           <button
             type="submit"
-            className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors"
+            className="w-full bg-[#003A8F] text-white py-2 px-4 rounded-md hover:bg-[#002F73] transition-colors"
           >
             Create Account
           </button>
@@ -126,7 +128,6 @@ export default function Register() {
             ← Back to Homepage
           </Link>
         </div>
-      </div>
       </div>
     </div>
   );

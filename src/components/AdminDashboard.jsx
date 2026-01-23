@@ -71,19 +71,31 @@ export default function AdminDashboard() {
 
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-bold mb-4 text-gray-900">Admin Controls</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <button className="p-4 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition">
-              <p className="font-bold text-blue-600">👥 Manage Users</p>
-              <p className="text-sm text-gray-600">View and manage all users</p>
-            </button>
-            <button className="p-4 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 transition">
-              <p className="font-bold text-green-600">💳 Payment Reports</p>
-              <p className="text-sm text-gray-600">View payment analytics</p>
-            </button>
-            <button className="p-4 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition">
-              <p className="font-bold text-red-600">🛡️ Security Alerts</p>
-              <p className="text-sm text-gray-600">Monitor fraud detection</p>
-            </button>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <Link to="/admin-reports" className="p-4 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition text-center">
+              <p className="text-2xl mb-2">📊</p>
+              <p className="font-bold text-blue-600 text-sm">Reports</p>
+            </Link>
+            <Link to="/admin-dashboard/settings" className="p-4 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition text-center">
+              <p className="text-2xl mb-2">⚙️</p>
+              <p className="font-bold text-blue-600 text-sm">Settings</p>
+            </Link>
+            <Link to="/admin-dashboard/ai-control" className="p-4 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition text-center">
+              <p className="text-2xl mb-2">🤖</p>
+              <p className="font-bold text-blue-600 text-sm">AI Control Panel</p>
+            </Link>
+            <Link to="/admin-dashboard/invoices" className="p-4 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition text-center">
+              <p className="text-2xl mb-2">🧾</p>
+              <p className="font-bold text-blue-600 text-sm">Invoices</p>
+            </Link>
+            <Link to="/admin-dashboard/notifications" className="p-4 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition text-center">
+              <p className="text-2xl mb-2">🔔</p>
+              <p className="font-bold text-blue-600 text-sm">Notifications</p>
+            </Link>
+            <Link to="/admin-dashboard/payments" className="p-4 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition text-center">
+              <p className="text-2xl mb-2">💳</p>
+              <p className="font-bold text-blue-600 text-sm">Payments</p>
+            </Link>
           </div>
         </div>
       </div>

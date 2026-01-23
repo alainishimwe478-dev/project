@@ -1,7 +1,9 @@
 // Homepage.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import rssbLogo from '../images/images.png';
+import testimonialImg from '../images/1.jpg';
 import HealthPayFooter from './HealthPayFooter';
 
 export default function Homepage() {
@@ -35,7 +37,7 @@ export default function Homepage() {
               <Link to="/login" className="px-4 py-2 bg-[#003A8F] text-white rounded-lg hover:bg-[#002F73] transition-colors">
                 Login
               </Link>
-              <Link to="/register" className="px-4 py-2 bg-[#0E9F6E] text-white rounded-lg hover:bg-[#0B7F58] transition-colors">
+              <Link to="/register" className="px-4 py-2 bg-[#F5C400] text-[#003A8F] font-semibold rounded-lg hover:bg-[#E6B800] transition-colors">
                 Register
               </Link>
             </div>
@@ -44,7 +46,7 @@ export default function Homepage() {
       </nav>
 
       {/* Hero Section */}
-      <section id="home" className="bg-gradient-to-r from-[#003A8F] to-[#0E9F6E] text-white py-32">
+      <section id="home" className="bg-gradient-to-r from-[#003A8F] to-[#002F73] text-white py-32">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             {/* Left Content */}
@@ -54,12 +56,12 @@ export default function Homepage() {
                 alt="RSSB Official Logo"
                 className="h-16 mb-6 object-contain"
               />
-              <h1 className="text-5xl font-bold mb-6 leading-tight">
+              <h1 className="text-5xl font-bold mb-6 leading-tight text-white">
                 Simplify Your Health Payments.
                 <br />
                 Accelerate Your Care Access.
               </h1>
-              <p className="text-lg mb-8 text-blue-50">
+              <p className="text-lg mb-8 text-white">
                 At HealthPay AI, we transform complex health insurance and medical payments into a secure, intelligent, and stress-free experience, ensuring faster approvals, transparent costs, and seamless access to healthcare.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
@@ -197,12 +199,76 @@ export default function Homepage() {
         </div>
       </section>
 
+      {/* Testimonials Section */}
+      <section className="py-24 bg-[#F3F6FA] overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="relative flex flex-col lg:flex-row items-center justify-center gap-12">
+            {/* Vertical Label */}
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="hidden lg:block absolute -left-10 top-1/2 -translate-y-1/2"
+            >
+              <span
+                className="tracking-widest font-semibold text-lg"
+                style={{ writingMode: "vertical-rl", color: "#003A8F" }}
+              >
+                TESTIMONIALS
+              </span>
+            </motion.div>
+
+            {/* Image Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="relative z-10"
+            >
+              <div className="bg-white p-2 shadow-xl rounded-lg border-2 border-[#F5C400]">
+                <img
+                  src={testimonialImg}
+                  alt="HealthPay AI Testimonial"
+                  className="w-72 h-80 object-cover rounded-md"
+                />
+              </div>
+            </motion.div>
+
+            {/* Content Card */}
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="bg-white shadow-xl rounded-xl p-10 max-w-xl relative border-t-4 border-[#F5C400]"
+            >
+              <h3 className="text-xl font-bold mb-1 text-[#003A8F]">
+                Regis Rugemanshuro
+              </h3>
+              <p className="text-sm mb-6 text-[#002F73]">
+                Director General · RSSB
+              </p>
+
+              <p className="text-gray-700 leading-relaxed">
+                "<strong style={{ color: "#003A8F" }}>HealthPay AI</strong> represents a transformative step in Rwanda's
+                digital health infrastructure. By automating payment processing and
+                integrating AI-driven fraud detection, we're ensuring that every
+                Rwandan receives quality healthcare without financial barriers. This
+                innovation strengthens RSSB's mission to provide universal health coverage."
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* Call to Action */}
-      <section className="py-16 bg-[#0E9F6E] text-white text-center">
+      <section className="py-16 bg-[#003A8F] text-white text-center">
         <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-3xl font-bold mb-4">Ready to Transform Health Insurance Payments?</h2>
           <p className="text-xl mb-8">Join HealthPay AI today and experience the future of automated health insurance payments.</p>
-          <Link to="/register" className="px-8 py-3 bg-white text-[#0E9F6E] font-semibold rounded-lg hover:bg-gray-100 transition-colors">
+          <Link to="/register" className="px-8 py-3 bg-[#F5C400] text-[#003A8F] font-semibold rounded-lg hover:bg-[#E6B800] transition-colors">
             Join HealthPay AI Now
           </Link>
         </div>
