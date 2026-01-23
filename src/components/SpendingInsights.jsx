@@ -1,5 +1,4 @@
 import React from "react";
-import { PieChart, Pie, Cell } from "recharts";
 import { useDarkMode } from "../contexts/DarkModeContext";
 
 const data = [
@@ -21,34 +20,29 @@ export default function SpendingInsights() {
         isDark ? 'text-white' : 'text-gray-900'
       }`}>AI Spending Insights</h3>
 
-      <div className="flex justify-center">
-        <PieChart width={220} height={220}>
-          <Pie
-            data={data}
-            cx={110}
-            cy={110}
-            outerRadius={80}
-            dataKey="value"
-          >
-            {data.map((_, i) => (
-              <Cell key={i} fill={COLORS[i]} />
-            ))}
-          </Pie>
-        </PieChart>
-      </div>
-
-      <div className="flex justify-center gap-4 mt-2 mb-3">
+      <div className="space-y-2">
         {data.map((item, i) => (
-          <div key={item.name} className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[i] }}></div>
-            <span className={`text-xs ${
-              isDark ? 'text-gray-300' : 'text-gray-600'
-            }`}>{item.name} {item.value}%</span>
+          <div key={item.name}>
+            <div className="flex justify-between mb-1">
+              <span className={`text-sm ${
+                isDark ? 'text-gray-300' : 'text-gray-600'
+              }`}>{item.name}</span>
+              <span className="text-sm font-bold">{item.value}%</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div
+                className="h-2 rounded-full"
+                style={{
+                  width: `${item.value}%`,
+                  backgroundColor: COLORS[i],
+                }}
+              />
+            </div>
           </div>
         ))}
       </div>
 
-      <p className={`text-sm mt-2 ${
+      <p className={`text-sm mt-4 ${
         isDark ? 'text-gray-300' : 'text-gray-600'
       }`}>
         <span className="text-lg">📈</span> Hospital spending increased by <b>28%</b>

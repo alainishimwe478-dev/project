@@ -1,5 +1,8 @@
+// Homepage.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
+import rssbLogo from '../images/images.png';
+import HealthPayFooter from './HealthPayFooter';
 
 export default function Homepage() {
   return (
@@ -10,10 +13,15 @@ export default function Homepage() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-8">
               <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">R</span>
+                <img
+                  src={rssbLogo}
+                  alt="RSSB Logo"
+                  className="h-10 w-auto object-contain"
+                />
+                <div className="flex flex-col leading-tight">
+                  <span className="font-bold text-xl text-gray-900">HealthPay AI</span>
+                  <span className="text-xs text-gray-500">Powered by RSSB</span>
                 </div>
-                <span className="font-bold text-xl text-gray-900">HealthPay AI</span>
               </div>
               <div className="hidden md:flex space-x-6">
                 <a href="#home" className="text-gray-700 hover:text-blue-600 font-medium">Home</a>
@@ -24,10 +32,10 @@ export default function Homepage() {
               </div>
             </div>
             <div className="flex space-x-3">
-              <Link to="/login" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <Link to="/login" className="px-4 py-2 bg-[#003A8F] text-white rounded-lg hover:bg-[#002F73] transition-colors">
                 Login
               </Link>
-              <Link to="/register" className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+              <Link to="/register" className="px-4 py-2 bg-[#0E9F6E] text-white rounded-lg hover:bg-[#0B7F58] transition-colors">
                 Register
               </Link>
             </div>
@@ -36,19 +44,62 @@ export default function Homepage() {
       </nav>
 
       {/* Hero Section */}
-      <section id="home" className="bg-gradient-to-r from-blue-500 to-green-500 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <h1 className="text-5xl font-bold mb-6">Smart Health Insurance Payments Powered by AI</h1>
-          <p className="text-xl mb-8 max-w-3xl mx-auto">
-            Automated, secure, and real-time payments for Rwanda's health insurance system.
-          </p>
-          <div className="flex justify-center space-x-4">
-            <Link to="/register" className="px-8 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors">
-              Get Started
-            </Link>
-            <Link to="/dashboard" className="px-8 py-3 bg-blue-700 text-white font-semibold rounded-lg hover:bg-blue-800 transition-colors">
-              View Dashboard Demo
-            </Link>
+      <section id="home" className="bg-gradient-to-r from-[#003A8F] to-[#0E9F6E] text-white py-32">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
+            <div>
+              <img
+                src={rssbLogo}
+                alt="RSSB Official Logo"
+                className="h-16 mb-6 object-contain"
+              />
+              <h1 className="text-5xl font-bold mb-6 leading-tight">
+                Simplify Your Health Payments.
+                <br />
+                Accelerate Your Care Access.
+              </h1>
+              <p className="text-lg mb-8 text-blue-50">
+                At HealthPay AI, we transform complex health insurance and medical payments into a secure, intelligent, and stress-free experience, ensuring faster approvals, transparent costs, and seamless access to healthcare.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link to="/register" className="px-8 py-3 bg-white text-[#003A8F] font-semibold rounded-lg hover:bg-gray-100 transition-colors text-center">
+                  Get Started with HealthPay AI
+                </Link>
+                <Link to="#how-it-works" className="px-8 py-3 bg-[#002F73] text-white font-semibold rounded-lg hover:bg-[#001F4D] transition-colors text-center">
+                  Explore How It Works
+                </Link>
+              </div>
+              {/* Supporting Features */}
+              <div className="mt-10 space-y-2 text-sm">
+                <p className="flex items-center"><span className="mr-2">✔</span> Instant claim validation</p>
+                <p className="flex items-center"><span className="mr-2">✔</span> AI fraud detection</p>
+                <p className="flex items-center"><span className="mr-2">✔</span> Multi-language support (EN • FR • RW)</p>
+                <p className="flex items-center"><span className="mr-2">✔</span> Real-time payment tracking</p>
+              </div>
+            </div>
+            
+            {/* Right - Floating Icons */}
+            <div className="relative h-96 hidden md:flex items-center justify-center">
+              {/* Center Circle */}
+              <div className="absolute w-40 h-40 bg-white bg-opacity-20 rounded-full flex flex-col items-center justify-center border-2 border-white">
+                <div className="text-4xl mb-2">🤖</div>
+                <p className="text-sm font-bold text-center">HealthPay AI Core</p>
+                <p className="text-xs text-center mt-1">AI-Driven Health Payments</p>
+              </div>
+              
+              {/* Floating Icons */}
+              <div className="absolute top-0 left-0 text-5xl animate-bounce" style={{animationDelay: '0s'}}>🧑⚕️</div>
+              <div className="absolute top-0 right-0 text-5xl animate-bounce" style={{animationDelay: '0.2s'}}>👩💼</div>
+              <div className="absolute bottom-0 left-0 text-5xl animate-bounce" style={{animationDelay: '0.4s'}}>🏥</div>
+              <div className="absolute bottom-0 right-0 text-5xl animate-bounce" style={{animationDelay: '0.6s'}}>🏛️</div>
+              
+              {/* Labels */}
+              <p className="absolute top-20 left-0 text-xs font-semibold">Healthcare Providers</p>
+              <p className="absolute top-20 right-0 text-xs font-semibold text-right">Patients</p>
+              <p className="absolute bottom-20 left-0 text-xs font-semibold">Hospitals & Clinics</p>
+              <p className="absolute bottom-20 right-0 text-xs font-semibold text-right">RSSB Authority</p>
+            </div>
           </div>
         </div>
       </section>
@@ -117,8 +168,9 @@ export default function Homepage() {
       </section>
 
       {/* Trust & Governance Section */}
-      <section className="py-20 bg-blue-900 text-white">
+      <section className="py-20 bg-[#003A8F] text-white">
         <div className="max-w-7xl mx-auto px-4 text-center">
+          <p className="text-blue-200 text-lg mb-12">Official RSSB Digital Health Payment Infrastructure</p>
           <h2 className="text-4xl font-bold mb-12">Trust & Governance</h2>
           <div className="grid md:grid-cols-4 gap-8">
             <div className="flex flex-col items-center">
@@ -146,32 +198,18 @@ export default function Homepage() {
       </section>
 
       {/* Call to Action */}
-      <section className="py-16 bg-green-600 text-white text-center">
+      <section className="py-16 bg-[#0E9F6E] text-white text-center">
         <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-3xl font-bold mb-4">Ready to Transform Health Insurance Payments?</h2>
           <p className="text-xl mb-8">Join HealthPay AI today and experience the future of automated health insurance payments.</p>
-          <Link to="/register" className="px-8 py-3 bg-white text-green-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors">
+          <Link to="/register" className="px-8 py-3 bg-white text-[#0E9F6E] font-semibold rounded-lg hover:bg-gray-100 transition-colors">
             Join HealthPay AI Now
           </Link>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-8">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex space-x-6 mb-4 md:mb-0">
-              <a href="#about" className="text-gray-300 hover:text-white">About RSSB</a>
-              <a href="#privacy" className="text-gray-300 hover:text-white">Privacy Policy</a>
-              <a href="#terms" className="text-gray-300 hover:text-white">Terms</a>
-              <a href="#contact" className="text-gray-300 hover:text-white">Contact</a>
-            </div>
-            <div className="text-gray-300">
-              © 2024 HealthPay AI - RSSB Rwanda
-            </div>
-          </div>
-        </div>
-      </footer>
+      <HealthPayFooter />
     </div>
   );
 }
