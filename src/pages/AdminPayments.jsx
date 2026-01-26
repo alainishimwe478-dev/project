@@ -1,8 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function AdminPayments() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [payments, setPayments] = useState([]);
+  const [stats, setStats] = useState({
+    total: 68000,
+    completed: 43000,
+    pending: 25000
+  });
+
+  useEffect(() => {
+    // Fetch payments data
+    fetch('http://localhost:5000/api/payments')
+      .then(res => res.json())
+      .then(data => setPayments(data))
+      .catch(() => console.log('Using default payments data'));
+    
+    // Fetch payment stats
+    fetch('http://localhost:5000/api/payments/stats')
+      .then(res => res.json())
+      .then(data => setStats(prev => ({ ...prev, ...data })))
+      .catch(() => console.log('Using default stats data'));
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -19,12 +39,6 @@ export default function AdminPayments() {
           </button>
         </div>
         <nav className="mt-8 space-y-2 px-4">
-          <Link to="/admin-dashboard" className="block px-4 py-2 rounded hover:bg-[#002F73] transition">
-            {sidebarOpen ? '⚙️ Admin Dashboard' : '⚙️'}
-          </Link>
-          <Link to="/admin-reports" className="block px-4 py-2 rounded hover:bg-[#002F73] transition">
-            {sidebarOpen ? '📊 Reports' : '📊'}
-          </Link>
           <Link to="/admin-payments" className="block px-4 py-2 rounded bg-[#F5C400] text-[#003A8F] font-semibold transition">
             {sidebarOpen ? '💳 Payments' : '💳'}
           </Link>
@@ -35,7 +49,7 @@ export default function AdminPayments() {
         <header className="bg-white shadow-sm border-b">
           <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
             <h1 className="text-2xl font-bold text-gray-900">💳 Payments</h1>
-            <Link to="/admin-reports" className="text-[#003A8F] hover:text-[#002F73]">
+            <Link to="/payments" className="text-[#003A8F] hover:text-[#002F73]">
               ← Back
             </Link>
           </div>
@@ -45,15 +59,15 @@ export default function AdminPayments() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div className="bg-white rounded-lg shadow-md p-6">
               <p className="text-sm text-gray-600">Total Payments</p>
-              <p className="text-3xl font-bold text-[#003A8F]">RWF 68,000</p>
+              <p className="text-3xl font-bold text-[#003A8F]">RWF {stats.total.toLocaleString()}</p>
             </div>
             <div className="bg-white rounded-lg shadow-md p-6">
               <p className="text-sm text-gray-600">Completed</p>
-              <p className="text-3xl font-bold text-green-600">43,000</p>
+              <p className="text-3xl font-bold text-green-600">{stats.completed.toLocaleString()}</p>
             </div>
             <div className="bg-white rounded-lg shadow-md p-6">
               <p className="text-sm text-gray-600">Pending</p>
-              <p className="text-3xl font-bold text-yellow-600">25,000</p>
+              <p className="text-3xl font-bold text-yellow-600">{stats.pending.toLocaleString()}</p>
             </div>
           </div>
 

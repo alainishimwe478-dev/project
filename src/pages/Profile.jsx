@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TopBar from "../components/TopBar";
 import SideMenu from "../components/SideMenu";
 import ProfileHeader from "../components/ProfileHeader";
@@ -10,7 +10,21 @@ import { useDarkMode } from "../contexts/DarkModeContext";
 
 export default function Profile() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [user, setUser] = useState({
+    id: 1,
+    name: "Admin User",
+    email: "admin@rssb.rw",
+    role: "admin"
+  });
   const { isDark } = useDarkMode();
+
+  useEffect(() => {
+    // Fetch user profile data
+    fetch(`http://localhost:5000/api/profile/${user.id}`)
+      .then(res => res.json())
+      .then(data => setUser(prev => ({ ...prev, ...data })))
+      .catch(() => console.log('Using default user data'));
+  }, []);
 
   return (
     <div className={`min-h-screen ${isDark ? 'bg-gray-900' : 'bg-gray-100'}`}>

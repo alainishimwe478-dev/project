@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from "recharts";
+import React, { useState, useEffect } from "react";
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Legend } from "recharts";
 import TopBar from "../components/TopBar";
 import SideMenu from "../components/SideMenu";
 import BottomNav from "../components/BottomNav";
@@ -20,7 +20,39 @@ const monthlyData = [
 
 export default function DashboardOverview() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [dashboardData, setDashboardData] = useState({});
+  const [loading, setLoading] = useState(true);
   const { isDark } = useDarkMode();
+
+  useEffect(() => {
+    fetch('http://localhost:5000/api/dashboard/overview')
+      .then(res => res.json())
+      .then(data => {
+        setDashboardData(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        console.log('Using default dashboard data');
+        setDashboardData({
+          coverageBalance: 'RWF 150,000',
+          monthlySpending: 'RWF 61,000',
+          activeAlerts: 2,
+          aiScore: '85/100',
+          recentActivity: [
+            { type: '🏥 Hospital Visit', amount: 'RWF 5,000', date: 'Today' },
+            { type: '💊 Pharmacy', amount: 'RWF 2,000', date: 'Yesterday' },
+            { type: '🩺 Clinic Visit', amount: 'RWF 3,500', date: '2 days ago' },
+            { type: '🏥 Emergency Visit', amount: 'RWF 15,000', date: '3 days ago' },
+            { type: '💊 Prescription Refill', amount: 'RWF 1,200', date: '5 days ago' }
+          ],
+          upcomingAppointments: [
+            { hospital: 'CHUK', date: 'Jan 25, 2024', time: '10:00 AM', type: 'Consultation' },
+            { hospital: 'King Faisal', date: 'Jan 28, 2024', time: '2:30 PM', type: 'Follow-up' }
+          ]
+        });
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <div className={`min-h-screen ${isDark ? 'bg-gray-900' : 'bg-gray-100'}`}>
@@ -40,10 +72,10 @@ export default function DashboardOverview() {
         </div>
 
         <div className="grid grid-cols-2 gap-4 mb-6">
-          <Card title="Coverage Balance" value="RWF 150,000" trend="+5%" isDark={isDark} />
-          <Card title="This Month" value="RWF 61,000" trend="+23%" isDark={isDark} />
-          <Card title="Active Alerts" value="2" badge isDark={isDark} />
-          <Card title="AI Score" value="85/100" color="text-green-600" isDark={isDark} />
+          <Card title="Coverage Balance" value={dashboardData.coverageBalance || "RWF 150,000"} trend="+5%" isDark={isDark} />
+          <Card title="This Month" value={dashboardData.monthlySpending || "RWF 61,000"} trend="+23%" isDark={isDark} />
+          <Card title="Active Alerts" value={dashboardData.activeAlerts || "2"} badge isDark={isDark} />
+          <Card title="AI Score" value={dashboardData.aiScore || "85/100"} color="text-green-600" isDark={isDark} />
         </div>
 
         {/* Charts Section */}
@@ -57,13 +89,14 @@ export default function DashboardOverview() {
                     <Cell key={index} fill={entry.color} />
                   ))}
                 </Pie>
+                <Tooltip />
               </PieChart>
             </ResponsiveContainer>
             <div className="flex justify-center gap-4 mt-2">
               {spendingData.map((item) => (
                 <div key={item.name} className="flex items-center gap-1">
                   <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></div>
-                  <span className={`text-xs ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>{item.name}</span>
+                  <span className={`text-xs ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>{item.name} ({item.value}%)</span>
                 </div>
               ))}
             </div>
@@ -75,6 +108,7 @@ export default function DashboardOverview() {
               <BarChart data={monthlyData}>
                 <XAxis dataKey="month" />
                 <YAxis hide />
+                <Tooltip formatter={(value) => [`RWF ${value.toLocaleString()}`, 'Amount']} />
                 <Bar dataKey="amount" fill="#3B82F6" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -100,24 +134,44 @@ export default function DashboardOverview() {
               <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Fraud risk level</span>
               <span className="font-semibold text-green-600">Low</span>
             </div>
+            <div className="flex justify-between items-center">
+              <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Next premium due</span>
+              <span className="font-semibold text-red-600">Feb 15, 2024</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Upcoming Appointments */}
+        <div className={`rounded-xl p-4 shadow mb-4 ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+          <h2 className={`font-semibold mb-3 ${isDark ? 'text-white' : 'text-gray-900'}`}>Upcoming Appointments</h2>
+          <div className="space-y-3">
+            {(dashboardData.upcomingAppointments || []).map((appointment, i) => (
+              <div key={i} className={`flex justify-between items-center p-3 rounded-lg ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                <div>
+                  <p className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>{appointment.hospital}</p>
+                  <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>{appointment.type}</p>
+                </div>
+                <div className="text-right">
+                  <p className={`text-sm font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>{appointment.date}</p>
+                  <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>{appointment.time}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
         <div className={`rounded-xl p-4 shadow ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
           <h2 className={`font-semibold mb-3 ${isDark ? 'text-white' : 'text-gray-900'}`}>Recent Activity</h2>
           <div className="space-y-2">
-            <div className="flex justify-between items-center">
-              <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>🏥 Hospital Visit</span>
-              <span className={`text-sm font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>RWF 5,000</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>💊 Pharmacy</span>
-              <span className={`text-sm font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>RWF 2,000</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>🩺 Clinic Visit</span>
-              <span className={`text-sm font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>RWF 3,500</span>
-            </div>
+            {(dashboardData.recentActivity || []).slice(0, 5).map((activity, i) => (
+              <div key={i} className="flex justify-between items-center">
+                <div>
+                  <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>{activity.type}</span>
+                  <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{activity.date}</p>
+                </div>
+                <span className={`text-sm font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>{activity.amount}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
