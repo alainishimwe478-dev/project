@@ -1,26 +1,13 @@
-import React from 'react';
-import { useAuth } from '../auth/AuthContext';
-import { Navigate } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
 
-export const ProtectedRoute = ({ children, requireAdmin = false }) => {
-  const { user, role } = useAuth();
+export default function ProtectedRoute({ children, role }) {
+  const user = JSON.parse(localStorage.getItem("user") || "null");
 
-  // If not logged in, redirect to login
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
+  if (!user) return <Navigate to="/login" />;
 
-  // If admin route required but user is not admin, redirect to user dashboard
-  if (requireAdmin && role !== 'ADMIN') {
-    return <Navigate to="/dashboard" replace />;
-  }
-
-  // If user tries to access admin routes directly, block them
-  if (role === 'USER' && window.location.pathname.startsWith('/admin')) {
-    return <Navigate to="/dashboard" replace />;
+  if (role && user.role !== role) {
+    return <Navigate to="/dashboard" />;
   }
 
   return children;
-};
-
-export default ProtectedRoute;
+}

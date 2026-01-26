@@ -5,28 +5,48 @@ import ThemeToggle from './ThemeToggle';
 export default function Sidebar({ collapsed = false, setCollapsed = () => {} }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [user, setUser] = useState({ role: "admin", name: "Admin User" });
-  const [menus, setMenus] = useState([
-    { to: "/admin-dashboard", icon: "📊", label: "Dashboard" },
-    { to: "/users", icon: "👤", label: "User Management" },
-    { to: "/admin-payments", icon: "💳", label: "Payments" },
-    { to: "/admin/claims", icon: "📄", label: "Claims" },
-    { to: "/admin/fraud", icon: "🛡️", label: "Fraud Detection" },
-    { to: "/admin/hospitals", icon: "🏥", label: "Hospitals" },
-    { to: "/admin/reports", icon: "📈", label: "Reports" }
-  ]);
+  const [menus, setMenus] = useState([]);
 
   useEffect(() => {
-    // Fetch user data
-    fetch('http://localhost:5000/api/user/current')
-      .then(res => res.json())
-      .then(data => setUser(prev => ({ ...prev, ...data })))
-      .catch(() => console.log('Using default user data'));
+    // Get user from localStorage
+    const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
+    if (storedUser) {
+      setUser(storedUser);
+    }
     
-    // Fetch menu permissions based on user role
-    fetch('http://localhost:5000/api/menu/permissions')
-      .then(res => res.json())
-      .then(data => setMenus(data))
-      .catch(() => console.log('Using default menu data'));
+    // Set menus based on user role
+    let roleMenus = [];
+    
+    if (storedUser?.role === 'admin') {
+      roleMenus = [
+        { to: "/admin-dashboard", icon: "📊", label: "Dashboard" },
+        { to: "/users", icon: "👤", label: "User Management" },
+        { to: "/admin-payments", icon: "💳", label: "Payments" },
+        { to: "/admin/claims", icon: "📄", label: "Claims" },
+        { to: "/admin/fraud", icon: "🛡️", label: "Fraud Detection" },
+        { to: "/admin/hospitals", icon: "🏥", label: "Hospitals" },
+        { to: "/admin/reports", icon: "📈", label: "Reports" }
+      ];
+    } else if (storedUser?.role === 'hospital') {
+      roleMenus = [
+        { to: "/hospital-dashboard", icon: "🏥", label: "Dashboard" },
+        { to: "/hospital/patients", icon: "👥", label: "Patients" },
+        { to: "/hospital/appointments", icon: "📅", label: "Appointments" },
+        { to: "/hospital/billing", icon: "💰", label: "Billing" },
+        { to: "/hospital/reports", icon: "📊", label: "Reports" }
+      ];
+    } else {
+      // User role
+      roleMenus = [
+        { to: "/dashboard", icon: "🏠", label: "Dashboard" },
+        { to: "/payments", icon: "💳", label: "My Payments" },
+        { to: "/claims", icon: "📄", label: "My Claims" },
+        { to: "/profile", icon: "👤", label: "Profile" },
+        { to: "/appointments", icon: "📅", label: "Appointments" }
+      ];
+    }
+    
+    setMenus(roleMenus);
   }, []);
 
   return (
